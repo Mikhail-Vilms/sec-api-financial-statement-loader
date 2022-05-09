@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 using Amazon.Lambda.Core;
+using Amazon.Lambda.SQSEvents;
+using System.Threading.Tasks;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
@@ -19,9 +16,23 @@ namespace SecApiReportStructureLoader
         /// <param name="input"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public string FunctionHandler(string input, ILambdaContext context)
+        public async Task FunctionHandler(SQSEvent evnt, ILambdaContext context)
         {
-            return input?.ToUpper();
+            foreach (var msg in evnt.Records)
+            {
+                await ProcessMessageAsync(msg, context);
+            }
+        }
+
+        private async Task ProcessMessageAsync(SQSEvent.SQSMessage msg, ILambdaContext context)
+        {
+            void Log (string logMsg)
+            {
+                context.Logger.LogLine($"[RequestId: {context.AwsRequestId}]: {logMsg}");
+            }
+
+            Log($">>>>> Processing message {msg.Body}");
+            Log($"Finished processing. <<<<<");
         }
     }
 }
