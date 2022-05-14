@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
@@ -36,7 +37,6 @@ namespace SecApiReportStructureLoader.Services
         {
             string targetUrl = string.Format(_submissionsUrl, cikNumber);
             var request = new HttpRequestMessage(HttpMethod.Get, targetUrl);
-
             var response = await _httpClient.SendAsync(request);
             string responseJson = await response.Content.ReadAsStringAsync();
             return responseJson;

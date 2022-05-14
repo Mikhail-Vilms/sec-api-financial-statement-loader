@@ -12,6 +12,7 @@ resource "aws_lambda_function" "sec-api-report-structure-loader-lambda" {
     role = aws_iam_role.sec-api-report-structure-loader-lambda-exec-role.arn
     source_code_hash = filebase64sha256("lambda_payload.zip")
     publish = "true"
+    timeout = 30
 }
 
 resource "aws_lambda_event_source_mapping" "sqs-to-lambda-mapping" {

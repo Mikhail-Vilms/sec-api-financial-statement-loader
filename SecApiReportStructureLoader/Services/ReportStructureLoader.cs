@@ -35,7 +35,7 @@ namespace SecApiReportStructureLoader.Services
 
             // Save finalized structure of the cash flow statement to dynamo:
             await _reportStructureRepository.SaveToDynamo(cikNumber, financialStatementPositions);
-            logger($"Number of the financial potitions for {tickerSymbol}/{cikNumber}: {financialStatementPositions.Count}");
+            logger($"Report structure for {tickerSymbol}/{cikNumber} has been saved to dynamo");
         }
     }
 }

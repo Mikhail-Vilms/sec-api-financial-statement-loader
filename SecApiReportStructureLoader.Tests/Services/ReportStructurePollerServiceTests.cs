@@ -1,4 +1,5 @@
 ﻿using SecApiReportStructureLoader.Services;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -9,12 +10,14 @@ namespace SecApiReportStructureLoader.Tests.Services
         [Fact]
         public async Task GetReportStructure_Success()
         {
-            ReportStructureService _service = new ReportStructureService();
+            void Log(string logMsg)
+            {
+                Console.WriteLine(logMsg);
+            }
 
-            // await _service.GetReportStructure("CIK0000200406", "JNJ");
+            ReportStructureLoader _loader = new ReportStructureLoader();
 
-            //Assert.Equal("0000050863-22-000007", details.AccessionNumber);
-            //Assert.Equal("2021-12-25", details.ReportDate);
+            await _loader.Load("CIK0000050863", "INTC", Log);
 
             Assert.Equal(true, true);
         }

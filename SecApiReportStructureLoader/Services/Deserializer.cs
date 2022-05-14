@@ -25,7 +25,8 @@ namespace SecApiReportStructureLoader.Services
             // And deserialize it accordingly
             var snsWrapper = JsonSerializer.Deserialize<SNSMessage>(triggerMessage.Body);
 
-            if (!string.IsNullOrWhiteSpace(snsWrapper.Type) &&
+            if (snsWrapper != null &&
+                !string.IsNullOrWhiteSpace(snsWrapper.Type) &&
                 !string.IsNullOrWhiteSpace(snsWrapper.MessageId) &&
                 !string.IsNullOrWhiteSpace(snsWrapper.TopicArn) &&
                 !string.IsNullOrWhiteSpace(snsWrapper.Message) &&

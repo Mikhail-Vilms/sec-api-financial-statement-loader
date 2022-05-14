@@ -3,6 +3,7 @@ using Amazon.Lambda.SQSEvents;
 using SecApiReportStructureLoader.IServices;
 using SecApiReportStructureLoader.Models;
 using SecApiReportStructureLoader.Services;
+using System;
 using System.Threading.Tasks;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
@@ -50,9 +51,9 @@ namespace SecApiReportStructureLoader
             {
                 triggerMessage = _deserializer.Get(msg);
             }
-            catch
+            catch (Exception ex)
             {
-                Log($"Failed to deserialize lambda's trigger message");
+                Log($"Failed to deserialize lambda's trigger message: {ex}");
                 return;
             }
 
