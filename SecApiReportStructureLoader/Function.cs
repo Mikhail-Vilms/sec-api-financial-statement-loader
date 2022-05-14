@@ -1,5 +1,8 @@
 using Amazon.Lambda.Core;
 using Amazon.Lambda.SQSEvents;
+using SecApiReportStructureLoader.IServices;
+using SecApiReportStructureLoader.Models;
+using SecApiReportStructureLoader.Services;
 using System.Threading.Tasks;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
@@ -9,7 +12,15 @@ namespace SecApiReportStructureLoader
 {
     public class Function
     {
-        
+        private readonly IDeserializer _deserializer;
+        private readonly ReportStructureLoader _reportStructureLoader;
+
+        public Function()
+        {
+            _deserializer = new Deserializer();
+            _reportStructureLoader = new ReportStructureLoader();
+        }
+
         /// <summary>
         /// A simple function that takes a string and does a ToUpper
         /// </summary>
@@ -32,6 +43,21 @@ namespace SecApiReportStructureLoader
             }
 
             Log($">>>>> Processing message {msg.Body}");
+
+            LambdaTriggerMessage triggerMessage = null;
+
+            try 
+            {
+                triggerMessage = _deserializer.Get(msg);
+            }
+            catch
+            {
+                Log($"Failed to deserialize lambda's trigger message");
+                return;
+            }
+
+            await _reportStructureLoader.Load(triggerMessage.CikNumber, triggerMessage.TickerSymbol, Log);
+
             Log($"Finished processing. <<<<<");
         }
     }

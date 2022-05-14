@@ -1,8 +1,6 @@
 ﻿using SecApiReportStructureLoader.Helpers;
 using SecApiReportStructureLoader.Models;
-using SecApiReportStructureLoader.Repositories;
 using SecApiReportStructurePoller.Models;
-using SecApiReportStructurePoller.Services;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -11,24 +9,17 @@ using System.Xml.Schema;
 
 namespace SecApiReportStructureLoader.Services
 {
-    public class ReportStructurePollerService
+    public class ReportStructureService
     {
         private readonly SecApiClientService _secApiClientService;
-        private readonly ReportDetailsPollerService _reportDetailsPollerService;
-        private readonly ReportStructureRepository _reportStructureRepository;
 
-        public ReportStructurePollerService()
+        public ReportStructureService()
         {
             _secApiClientService = new SecApiClientService();
-            _reportDetailsPollerService = new ReportDetailsPollerService();
-            _reportStructureRepository = new ReportStructureRepository();
         }
 
-        public async Task GetReportStructure(string cikNumber, string ticker)
+        public async Task<Dictionary<string, FinancialStatementNode>> GetReportStructure(string cikNumber, string ticker, ReportDetails reportDetails)
         {
-            // Find latest 10k for the company:
-            ReportDetails reportDetails = await _reportDetailsPollerService.GetLatest10kReportDetails(cikNumber);
-
             // Get Taxanomy Xsd Document for the latest 10k:
             string taxanomyXsdDoc = await _secApiClientService.RetrieveTaxanomyXsdDoc(
                 cikNumber,
@@ -54,8 +45,7 @@ namespace SecApiReportStructureLoader.Services
             // Parse Xml and find all cash flow statement-related financial positions:
             Dictionary<string, FinancialStatementNode> financialStatementPositions = XbrlTaxanomyCalculationDocHelper.GetCashFlowsNodes(taxanomyCalDocXml, cashFlowUri);
 
-            // Save results to dynamo:
-            await _reportStructureRepository.SaveToDynamo(cikNumber, financialStatementPositions);
+            return financialStatementPositions;
         }
     }
 }

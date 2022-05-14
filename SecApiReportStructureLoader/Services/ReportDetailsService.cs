@@ -1,21 +1,20 @@
-﻿using SecApiReportStructureLoader.Services;
-using SecApiReportStructurePoller.Models;
+﻿using SecApiReportStructurePoller.Models;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace SecApiReportStructurePoller.Services
+namespace SecApiReportStructureLoader.Services
 {
-    public class ReportDetailsPollerService
+    public class ReportDetailsService
     {
         private readonly SecApiClientService _secApiClientService;
 
-        public ReportDetailsPollerService()
+        public ReportDetailsService()
         {
             _secApiClientService = new SecApiClientService();
         }
 
-        public async Task<ReportDetails> GetLatest10kReportDetails(string cikNumber)
+        public async Task<ReportDetails> GetLatest10kDetails(string cikNumber)
         {
             // Send HTTP Request to SEC API
             string submissionsResponseJson = await _secApiClientService.RetrieveSubmissions(cikNumber);

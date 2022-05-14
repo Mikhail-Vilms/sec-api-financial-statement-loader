@@ -9,9 +9,9 @@ namespace SecApiReportStructureLoader.Tests.Services
         [Fact]
         public async Task GetReportStructure_Success()
         {
-            ReportStructurePollerService _service = new ReportStructurePollerService();
+            ReportStructureService _service = new ReportStructureService();
 
-            await _service.GetReportStructure("CIK0000200406", "JNJ");
+            // await _service.GetReportStructure("CIK0000200406", "JNJ");
 
             //Assert.Equal("0000050863-22-000007", details.AccessionNumber);
             //Assert.Equal("2021-12-25", details.ReportDate);
