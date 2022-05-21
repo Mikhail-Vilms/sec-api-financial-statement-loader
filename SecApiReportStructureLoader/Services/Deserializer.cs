@@ -15,8 +15,8 @@ namespace SecApiReportStructureLoader.Services
             public string Timestamp { get; set; }
             public string SignatureVersion { get; set; }
             public string Signature { get; set; }
-            public string SigningCertUrl { get; set; }
-            public string UnsubscribeUrl { get; set; }
+            public string SigningCertURL { get; set; }
+            public string UnsubscribeURL { get; set; }
         }
 
         public LambdaTriggerMessage Get(SQSEvent.SQSMessage triggerMessage)
@@ -33,8 +33,8 @@ namespace SecApiReportStructureLoader.Services
                 !string.IsNullOrWhiteSpace(snsWrapper.Timestamp) &&
                 !string.IsNullOrWhiteSpace(snsWrapper.SignatureVersion) &&
                 !string.IsNullOrWhiteSpace(snsWrapper.Signature) &&
-                !string.IsNullOrWhiteSpace(snsWrapper.SigningCertUrl) &&
-                !string.IsNullOrWhiteSpace(snsWrapper.UnsubscribeUrl))
+                !string.IsNullOrWhiteSpace(snsWrapper.SigningCertURL) &&
+                !string.IsNullOrWhiteSpace(snsWrapper.UnsubscribeURL))
             {
                 return JsonSerializer.Deserialize<LambdaTriggerMessage>(snsWrapper.Message);
             }
