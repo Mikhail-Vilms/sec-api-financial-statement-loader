@@ -1,5 +1,5 @@
-resource "aws_iam_role" "sec-api-report-structure-loader-lambda-exec-role" {
-    name = "Sec-Api-Report-Structure-Loader-Lambda-Exec-Role"
+resource "aws_iam_role" "loader-lambda-function-exec-role" {
+    name = "${local.lambdaName}-Exec-Role"
     assume_role_policy = data.aws_iam_policy_document.lambda-assume-role-policy-doc.json
 }
 
@@ -16,12 +16,12 @@ data "aws_iam_policy_document" "lambda-assume-role-policy-doc" {
 }
 
 resource "aws_iam_role_policy_attachment" "lambda-full-access-policy-attach" {
-    role = aws_iam_role.sec-api-report-structure-loader-lambda-exec-role.name
+    role = aws_iam_role.loader-lambda-function-exec-role.name
     policy_arn = "arn:aws:iam::aws:policy/AWSLambda_FullAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "lambda-sqs-access-policy-attach" {
-    role = aws_iam_role.sec-api-report-structure-loader-lambda-exec-role.name
+    role = aws_iam_role.loader-lambda-function-exec-role.name
     policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole"
 }
 
@@ -43,12 +43,12 @@ data "aws_iam_policy_document" "lambda-dynamo-access-policy-doc" {
 }
 
 resource "aws_iam_policy" "lambda-dynamo-access-policy" {
-  name   = "Sec-Api-Report-Structure-Loader-Lambda-Dynamo-Access-Policy"
-  path   = "/"
-  policy = data.aws_iam_policy_document.lambda-dynamo-access-policy-doc.json
+    name   = "${local.lambdaName}-Dynamo-Access-Policy"
+    path   = "/"
+    policy = data.aws_iam_policy_document.lambda-dynamo-access-policy-doc.json
 }
 
 resource "aws_iam_role_policy_attachment" "lambda-sqs-dynamo-policy-attach" {
-    role = aws_iam_role.sec-api-report-structure-loader-lambda-exec-role.name
+    role = aws_iam_role.loader-lambda-function-exec-role.name
     policy_arn = aws_iam_policy.lambda-dynamo-access-policy.arn
 }

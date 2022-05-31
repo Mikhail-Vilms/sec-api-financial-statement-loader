@@ -20,7 +20,7 @@ namespace SecApiReportStructureLoader.Helpers
                     string attributeName = attribute.Name;
                     string attributeValue = attribute.Value;
 
-                    if (nodeName == "link:calculationLink" && attributeName == "xlink:role" && attributeValue == cashFlowUri)
+                    if (nodeName.Contains("calculationLink") && attributeName == "xlink:role" && attributeValue == cashFlowUri)
                     {
                         cashFlowStatementRootXmlNode = currentNode;
                     }
@@ -31,7 +31,7 @@ namespace SecApiReportStructureLoader.Helpers
             // Find all cash flow statement nodes:
             foreach (XmlElement cashFlowNode in cashFlowStatementRootXmlNode.ChildNodes)
             {
-                if (cashFlowNode.Name != "link:loc")
+                if (!cashFlowNode.Name.Contains("loc"))
                 {
                     continue;
                 }
@@ -50,7 +50,7 @@ namespace SecApiReportStructureLoader.Helpers
             // Find all links between cash flow statement nodes:
             foreach (XmlElement cashFlowNode in cashFlowStatementRootXmlNode.ChildNodes)
             {
-                if (cashFlowNode.Name != "link:calculationArc")
+                if (!cashFlowNode.Name.Contains("calculationArc"))
                 {
                     continue;
                 }

@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 namespace SecApiReportStructureLoader.Repositories
 {
-    [DynamoDBTable("sec-api-company-concepts")]
+    [DynamoDBTable("Sec-Api-Data")]
     public class ReportStructureDynamoDbItem
     {
-        [DynamoDBHashKey("cik")]
-        public string cik { get; set; }
+        [DynamoDBHashKey("PartitionKey")]
+        public string PartitionKey { get; set; }
 
-        [DynamoDBRangeKey("tag")]
-        public string tag { get; set; }
+        [DynamoDBRangeKey("SortKey")]
+        public string SortKey { get; set; }
 
         public List<FinancialStatementNode> FinancialPositions { get; set; }
     }

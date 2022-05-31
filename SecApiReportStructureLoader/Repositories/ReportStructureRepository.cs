@@ -13,7 +13,7 @@ namespace SecApiReportStructureLoader.Repositories
 {
     public class ReportStructureRepository
     {
-        private string _tableName = "sec-api-company-concepts";
+        private string _tableName = "Sec-Api-Data";
 
         public async Task SaveToDynamo(
             string cikNumber,
@@ -24,8 +24,8 @@ namespace SecApiReportStructureLoader.Repositories
 
             ReportStructureDynamoDbItem newItem = new ReportStructureDynamoDbItem()
             {
-                cik = cikNumber,
-                tag = "CashFlowStatementStructure",
+                PartitionKey = cikNumber,
+                SortKey = "ReportStructure_CashFlowStatement",
                 FinancialPositions = financialStatementPositions.Values.ToList()
             };
 
