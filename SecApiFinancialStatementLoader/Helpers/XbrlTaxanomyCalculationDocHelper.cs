@@ -1,8 +1,8 @@
-﻿using SecApiReportStructureLoader.Models;
+﻿using SecApiFinancialStatementLoader.Models;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace SecApiReportStructureLoader.Helpers
+namespace SecApiFinancialStatementLoader.Helpers
 {
     public class XbrlTaxanomyCalculationDocHelper
     {

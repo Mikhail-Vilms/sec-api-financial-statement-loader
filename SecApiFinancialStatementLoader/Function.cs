@@ -1,15 +1,18 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
 using Amazon.Lambda.Core;
 using Amazon.Lambda.SQSEvents;
-using SecApiReportStructureLoader.IServices;
-using SecApiReportStructureLoader.Models;
-using SecApiReportStructureLoader.Services;
-using System;
-using System.Threading.Tasks;
+using SecApiFinancialStatementLoader.IServices;
+using SecApiFinancialStatementLoader.Models;
+using SecApiFinancialStatementLoader.Services;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
-namespace SecApiReportStructureLoader
+namespace SecApiFinancialStatementLoader
 {
     public class Function
     {
@@ -38,7 +41,7 @@ namespace SecApiReportStructureLoader
 
         private async Task ProcessMessageAsync(SQSEvent.SQSMessage msg, ILambdaContext context)
         {
-            void Log (string logMsg)
+            void Log(string logMsg)
             {
                 context.Logger.LogLine($"[RequestId: {context.AwsRequestId}]: {logMsg}");
             }
@@ -47,7 +50,7 @@ namespace SecApiReportStructureLoader
 
             LambdaTriggerMessage triggerMessage = null;
 
-            try 
+            try
             {
                 triggerMessage = _deserializer.Get(msg);
             }

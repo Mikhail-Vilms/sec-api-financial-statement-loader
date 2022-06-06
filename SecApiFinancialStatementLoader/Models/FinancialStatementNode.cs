@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SecApiReportStructureLoader.Models
+namespace SecApiFinancialStatementLoader.Models
 {
     public class FinancialStatementNode
     {

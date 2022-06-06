@@ -37,7 +37,7 @@ data "aws_iam_policy_document" "lambda-dynamo-access-policy-doc" {
             "dynamodb:DeleteItem"
         ]
         resources = [
-            "arn:aws:dynamodb:us-east-1:672009997609:table/${local.dynamoDbTableName}"
+            "arn:aws:dynamodb:us-west-2:672009997609:table/${local.dynamoDbTableName}"
         ]
     }
 }

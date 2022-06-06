@@ -1,10 +1,9 @@
-﻿using SecApiReportStructurePoller.Models;
-using System;
+﻿using SecApiFinancialStatementLoader.Models;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace SecApiReportStructureLoader.Services
+namespace SecApiFinancialStatementLoader.Services
 {
     public class ReportDetailsService
     {

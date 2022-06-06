@@ -1,9 +1,9 @@
-﻿using SecApiReportStructureLoader.Services;
+﻿using SecApiFinancialStatementLoader.Services;
 using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace SecApiReportStructureLoader.Tests.Services
+namespace SecApiFinancialStatementLoader.Tests.Services
 {
     public class ReportStructurePollerServiceTests
     {
@@ -17,7 +17,7 @@ namespace SecApiReportStructureLoader.Tests.Services
 
             ReportStructureLoader _loader = new ReportStructureLoader();
 
-            await _loader.Load("CIK0000050863", "INTC", Log);
+            await _loader.Load("CIK0000886982", "GS", Log);
 
             Assert.Equal(true, true);
         }

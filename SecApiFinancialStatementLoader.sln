@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32228.343
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecApiFinancialStatementLoader", "SecApiFinancialStatementLoader\SecApiFinancialStatementLoader.csproj", "{C7BFABC0-55C4-4641-8F20-83A67B64D3F3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SecApiFinancialStatementLoader.Tests", "SecApiFinancialStatementLoader.Tests\SecApiFinancialStatementLoader.Tests.csproj", "{BB993147-E3B9-4823-8701-BF0B5C2B90BE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C7BFABC0-55C4-4641-8F20-83A67B64D3F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7BFABC0-55C4-4641-8F20-83A67B64D3F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7BFABC0-55C4-4641-8F20-83A67B64D3F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7BFABC0-55C4-4641-8F20-83A67B64D3F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB993147-E3B9-4823-8701-BF0B5C2B90BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB993147-E3B9-4823-8701-BF0B5C2B90BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB993147-E3B9-4823-8701-BF0B5C2B90BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB993147-E3B9-4823-8701-BF0B5C2B90BE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4B471BA9-BD6A-4284-946B-5DAFE621440A}
+	EndGlobalSection
+EndGlobal

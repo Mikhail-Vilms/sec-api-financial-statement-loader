@@ -10,6 +10,6 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SecApiReportStructureLoader\SecApiReportStructureLoader.csproj" />
+    <ProjectReference Include="..\SecApiFinancialStatementLoader\SecApiFinancialStatementLoader.csproj" />
   </ItemGroup>
 </Project>

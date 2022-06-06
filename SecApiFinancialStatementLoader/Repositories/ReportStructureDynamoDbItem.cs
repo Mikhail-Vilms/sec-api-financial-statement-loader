@@ -1,10 +1,10 @@
 ﻿using Amazon.DynamoDBv2.DataModel;
-using SecApiReportStructureLoader.Models;
+using SecApiFinancialStatementLoader.Models;
 using System.Collections.Generic;
 
-namespace SecApiReportStructureLoader.Repositories
+namespace SecApiFinancialStatementLoader.Repositories
 {
-    [DynamoDBTable("Sec-Api-Data")]
+    [DynamoDBTable("Sec-Api-Financial-Data")]
     public class ReportStructureDynamoDbItem
     {
         [DynamoDBHashKey("PartitionKey")]

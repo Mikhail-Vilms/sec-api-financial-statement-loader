@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
-namespace SecApiReportStructureLoader.Services
+namespace SecApiFinancialStatementLoader.Services
 {
     public class SecApiClientService
     {

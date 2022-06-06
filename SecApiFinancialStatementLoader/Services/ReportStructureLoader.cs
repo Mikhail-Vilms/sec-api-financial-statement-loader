@@ -1,11 +1,10 @@
-﻿using SecApiReportStructureLoader.Models;
-using SecApiReportStructureLoader.Repositories;
-using SecApiReportStructurePoller.Models;
+﻿using SecApiFinancialStatementLoader.Models;
+using SecApiFinancialStatementLoader.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SecApiReportStructureLoader.Services
+namespace SecApiFinancialStatementLoader.Services
 {
     public class ReportStructureLoader
     {

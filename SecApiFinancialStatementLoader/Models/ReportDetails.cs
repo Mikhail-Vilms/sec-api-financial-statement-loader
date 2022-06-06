@@ -1,4 +1,4 @@
-﻿namespace SecApiReportStructurePoller.Models
+﻿namespace SecApiFinancialStatementLoader.Models
 {
     public class ReportDetails
     {
