@@ -15,7 +15,7 @@ namespace SecApiFinancialStatementLoader.Tests.Services
                 Console.WriteLine(logMsg);
             }
 
-            ReportStructureLoader _loader = new ReportStructureLoader();
+            FinancialStatementStructureLoader _loader = new FinancialStatementStructureLoader();
 
             await _loader.Load("CIK0000886982", "GS", Log);
 

@@ -21,7 +21,7 @@ namespace SecApiFinancialStatementLoader.Services
 
         public LambdaTriggerMessage Get(SQSEvent.SQSMessage triggerMessage)
         {
-            // First we trying to understand if this message was posted to the queue from an SNS ropic subscription
+            // First we trying to understand if this message was posted to the queue from a SNS topic subscription
             // And deserialize it accordingly
             var snsWrapper = JsonSerializer.Deserialize<SNSMessage>(triggerMessage.Body);
 

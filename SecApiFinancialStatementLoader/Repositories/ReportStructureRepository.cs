@@ -11,10 +11,11 @@ namespace SecApiFinancialStatementLoader.Repositories
 {
     public class ReportStructureRepository
     {
-        private string _tableName = "Sec-Api-Financial-Data";
+        private readonly string _tableName = "Sec-Api-Financial-Data";
 
         public async Task SaveToDynamo(
             string cikNumber,
+            FinancialStatementType financialStatement,
             Dictionary<string, FinancialStatementNode> financialStatementPositions)
         {
             using var ddbClient = new AmazonDynamoDBClient(RegionEndpoint.USWest2);
@@ -23,7 +24,7 @@ namespace SecApiFinancialStatementLoader.Repositories
             ReportStructureDynamoDbItem newItem = new ReportStructureDynamoDbItem()
             {
                 PartitionKey = cikNumber,
-                SortKey = "ReportStructure_CashFlowStatement",
+                SortKey = $"StatementStructure_{financialStatement}",
                 FinancialPositions = financialStatementPositions.Values.ToList()
             };
 

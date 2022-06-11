@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 using Amazon.Lambda.Core;
 using Amazon.Lambda.SQSEvents;
+using Microsoft.Extensions.Hosting;
 using SecApiFinancialStatementLoader.IServices;
 using SecApiFinancialStatementLoader.Models;
 using SecApiFinancialStatementLoader.Services;
+using System;
+using System.Threading.Tasks;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
@@ -17,12 +15,17 @@ namespace SecApiFinancialStatementLoader
     public class Function
     {
         private readonly IDeserializer _deserializer;
-        private readonly ReportStructureLoader _reportStructureLoader;
+        private readonly FinancialStatementStructureLoader _loader;
 
         public Function()
         {
+            //var host = new HostBuilder()
+            //    .SetupHostForLambdaFunction()
+            //    .Build();
+            //var serviceProvider = host.Services;
+
             _deserializer = new Deserializer();
-            _reportStructureLoader = new ReportStructureLoader();
+            _loader = new FinancialStatementStructureLoader();
         }
 
         /// <summary>
@@ -60,7 +63,7 @@ namespace SecApiFinancialStatementLoader
                 return;
             }
 
-            await _reportStructureLoader.Load(triggerMessage.CikNumber, triggerMessage.TickerSymbol, Log);
+            await _loader.Load(triggerMessage.CikNumber, triggerMessage.TickerSymbol, Log);
 
             Log($"Finished processing. <<<<<");
         }
