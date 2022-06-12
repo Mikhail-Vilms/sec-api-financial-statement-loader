@@ -44,7 +44,9 @@ namespace SecApiFinancialStatementLoader.Services
                     cikNumber,
                     reportDetails.AccessionNumber,
                     tickerSymbol,
-                    reportDetails.ReportDate);
+                    reportDetails.ReportDate,
+                    logger);
+
             // Parse into XmlSchema:
             XmlSchema taxanomySchemaXsd = XmlSchema.Read(new StringReader(taxanomySchemaStr), null);
 
@@ -54,7 +56,9 @@ namespace SecApiFinancialStatementLoader.Services
                     cikNumber,
                     reportDetails.AccessionNumber,
                     tickerSymbol,
-                    reportDetails.ReportDate);
+                    reportDetails.ReportDate,
+                    logger);
+
             // Parse into xml doc:
             XmlDocument taxanomyCalculationLinkbaseXml = new XmlDocument();
             taxanomyCalculationLinkbaseXml.LoadXml(taxanomyCalculationLinkbaseStr);

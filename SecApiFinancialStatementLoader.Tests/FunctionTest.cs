@@ -15,8 +15,8 @@ namespace SecApiFinancialStatementLoader.Tests
         {
             LambdaTriggerMessage sqsMessage = new LambdaTriggerMessage()
             {
-                CikNumber = "CIK0000200406",
-                TickerSymbol = "JNJ"
+                CikNumber = "CIK0000050863",
+                TickerSymbol = "INTC"
             };
 
             string sqsMessageStr = JsonSerializer.Serialize(sqsMessage);

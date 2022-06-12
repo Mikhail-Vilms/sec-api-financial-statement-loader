@@ -46,7 +46,8 @@ namespace SecApiFinancialStatementLoader.Services
             string cikNumber,
             string accessionNumber,
             string ticker,
-            string filingDate)
+            string filingDate,
+            Action<string> logger)
         {
             string targetUrl = string
                 .Format(
@@ -55,6 +56,8 @@ namespace SecApiFinancialStatementLoader.Services
                     accessionNumber.Replace("-", string.Empty),
                     ticker.ToLowerInvariant(),
                     filingDate.Replace("-", string.Empty));
+
+            logger($"Trying to retrieve taxanomyXsdDoc from: {targetUrl}");
 
             var request = new HttpRequestMessage(HttpMethod.Get, targetUrl);
 
@@ -67,7 +70,8 @@ namespace SecApiFinancialStatementLoader.Services
             string cikNumber,
             string accessionNumber,
             string ticker,
-            string filingDate)
+            string filingDate,
+            Action<string> logger)
         {
             string targetUrl = string
                 .Format(
@@ -76,6 +80,8 @@ namespace SecApiFinancialStatementLoader.Services
                     accessionNumber.Replace("-", string.Empty),
                     ticker.ToLowerInvariant(),
                     filingDate.Replace("-", string.Empty));
+
+            logger($"Trying to retrieve taxanomyCalDoc from: {targetUrl}");
 
             var request = new HttpRequestMessage(HttpMethod.Get, targetUrl);
 

@@ -14,7 +14,8 @@ namespace SecApiFinancialStatementLoader.Helpers
                 new List<string>()
                 {
                     "StatementsOfEarnings", // used by GS
-                    "StatementsOfOperations" // used by AAPL
+                    "StatementsOfOperations", // used by AAPL
+                    "StatementsofIncome" // used by INTC
                 }
             },
             {
@@ -35,7 +36,7 @@ namespace SecApiFinancialStatementLoader.Helpers
 
         public static Dictionary<string, FinancialStatementNode> Get_FinancialStatementPositions_From_TaxanomyDocs(
             XmlSchema taxanomySchemaXsd,
-            XmlDocument taxanomyCalculationLinkbaseXml, 
+            XmlDocument taxanomyCalculationLinkbaseXml,
             FinancialStatementType financialStatement)
         {
             // Get the "roleURI" value for the Financial Statement of the specific type
