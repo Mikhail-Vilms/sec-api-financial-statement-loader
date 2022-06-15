@@ -1,5 +1,5 @@
 data "aws_sns_topic" "target-sns" {
-  name = local.targetSns
+  name = local.sourceSns
 }
 
 resource "aws_sqs_queue" "loader-lambda-function-q" {

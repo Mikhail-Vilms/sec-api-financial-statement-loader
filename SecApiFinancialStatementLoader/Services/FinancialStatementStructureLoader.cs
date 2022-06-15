@@ -65,12 +65,25 @@ namespace SecApiFinancialStatementLoader.Services
 
             foreach (FinancialStatementType financialStatementType in Enum.GetValues(typeof(FinancialStatementType)))
             {
+                Dictionary<string, FinancialStatementNode> financialStatementPositions = null;
                 // Retrieve and parse titles of the financial statement positions from the latest report:
-                Dictionary<string, FinancialStatementNode> financialStatementPositions = XblrTaxanomyDocsHelper
-                    .Get_FinancialStatementPositions_From_TaxanomyDocs(
-                        taxanomySchemaXsd,
-                        taxanomyCalculationLinkbaseXml,
-                        financialStatementType);
+                try
+                {
+                    financialStatementPositions = XblrTaxanomyDocsHelper
+                        .Get_FinancialStatementPositions_From_TaxanomyDocs(
+                            taxanomySchemaXsd,
+                            taxanomyCalculationLinkbaseXml,
+                            financialStatementType);
+                }
+                catch (Exception ex)
+                {
+                    logger($"CANT FETCH FIN STATEMENT: {tickerSymbol}/{cikNumber}/{financialStatementType}, msg: {ex.ToString()}");
+                }
+
+                if (financialStatementPositions == null)
+                {
+                    continue;
+                }
 
                 logger($"Number of the financial potitions for {tickerSymbol}/{cikNumber}/{financialStatementType}: {financialStatementPositions.Count}");
 

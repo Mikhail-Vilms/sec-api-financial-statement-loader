@@ -15,21 +15,28 @@ namespace SecApiFinancialStatementLoader.Helpers
                 {
                     "StatementsOfEarnings", // used by GS
                     "StatementsOfOperations", // used by AAPL
-                    "StatementsofIncome" // used by INTC
+                    "StatementsofIncome", // used by INTC
+                    "ResultsofOperations", // used by CAT
+                    "IncomeStatement", // used by IBM
+                    "IncomeStatements" // used by MSFT
                 }
             },
             {
                 FinancialStatementType.BalanceSheet.ToString(),
                 new List<string>()
                 {
-                    "BalanceSheets"
+                    "BalanceSheets",
+                    "BalanceSheet", // used by IBM
+                    "FinancialPosition" // used by CAT
                 }
             },
             {
                 FinancialStatementType.CashFlowStatement.ToString(),
                 new List<string>()
                 {
-                    "StatementsOfCashFlows"
+                    "StatementsOfCashFlows",
+                    "StatementofCashFlow", // used by CAT, IBM
+                    "CashFlowStatements" // used by MSFT
                 }
             },
         };

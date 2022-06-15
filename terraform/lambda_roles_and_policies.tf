@@ -40,6 +40,15 @@ data "aws_iam_policy_document" "lambda-dynamo-access-policy-doc" {
             "arn:aws:dynamodb:us-west-2:672009997609:table/${local.dynamoDbTableName}"
         ]
     }
+
+    statement {
+        actions = [
+            "SNS:Publish"
+        ]
+        resources = [
+            "arn:aws:sns:us-west-2:672009997609:${local.targetSns}"
+        ]
+    }
 }
 
 resource "aws_iam_policy" "lambda-dynamo-access-policy" {
