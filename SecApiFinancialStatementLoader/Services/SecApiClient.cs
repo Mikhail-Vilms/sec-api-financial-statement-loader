@@ -1,11 +1,12 @@
-﻿using System;
+﻿using SecApiFinancialStatementLoader.IServices;
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace SecApiFinancialStatementLoader.Services
 {
-    public class SecApiClientService
+    public class SecApiClient : ISecApiClient
     {
         private readonly string _submissionsUrl = "https://data.sec.gov/submissions/{0}.json";
 
@@ -19,7 +20,7 @@ namespace SecApiFinancialStatementLoader.Services
 
         private readonly HttpClient _httpClient;
 
-        public SecApiClientService()
+        public SecApiClient()
         {
             _httpClient = new HttpClient();
 
@@ -33,12 +34,16 @@ namespace SecApiFinancialStatementLoader.Services
                 .Add(new ProductInfoHeaderValue("(+http://www.example.com/ScraperBot.html)"));
         }
 
-        public async Task<string> RetrieveSubmissions(string cikNumber)
+        public async Task<string> RetrieveSubmissions(string cikNumber, Action<string> logger)
         {
             string targetUrl = string.Format(_submissionsUrl, cikNumber);
+
+            logger($"Trying to retrieve list of company's submissions from: {targetUrl}");
+
             var request = new HttpRequestMessage(HttpMethod.Get, targetUrl);
             var response = await _httpClient.SendAsync(request);
             string responseJson = await response.Content.ReadAsStringAsync();
+            
             return responseJson;
         }
 

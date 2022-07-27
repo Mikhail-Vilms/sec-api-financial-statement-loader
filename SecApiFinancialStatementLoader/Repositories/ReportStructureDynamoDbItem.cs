@@ -13,6 +13,6 @@ namespace SecApiFinancialStatementLoader.Repositories
         [DynamoDBRangeKey("SortKey")]
         public string SortKey { get; set; }
 
-        public List<FinancialStatementNode> FinancialPositions { get; set; }
+        public Dictionary<string, FinancialStatementNode> FinancialPositions { get; set; }
     }
 }

@@ -1,5 +1,8 @@
-﻿using SecApiFinancialStatementLoader.Services;
-using System;
+﻿using Amazon.Lambda.SQSEvents;
+using Amazon.Lambda.TestUtilities;
+using SecApiFinancialStatementLoader.Models;
+using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -10,16 +13,28 @@ namespace SecApiFinancialStatementLoader.Tests.Services
         [Fact]
         public async Task GetReportStructure_Success()
         {
-            void Log(string logMsg)
+            LambdaTriggerMessage sqsMessage = new LambdaTriggerMessage()
             {
-                Console.WriteLine(logMsg);
-            }
+                CikNumber = "CIK0000050863",
+                TickerSymbol = "INTC",
+            };
 
-            FinancialStatementStructureLoader _loader = new FinancialStatementStructureLoader();
+            string sqsMessageStr = JsonSerializer.Serialize(sqsMessage);
 
-            await _loader.Load("CIK0000886982", "GS", Log);
+            var sqsEvent = new SQSEvent
+            {
+                Records = new List<SQSEvent.SQSMessage>()
+                {
+                    new SQSEvent.SQSMessage{ Body = sqsMessageStr}
+                }
+            };
 
-            Assert.Equal(true, true);
+            // Invoke the lambda function and confirm the string was upper cased.
+            var function = new Function();
+            var context = new TestLambdaContext();
+            await function.FunctionHandler(sqsEvent, context);
+
+            Assert.Equal("HELLO WORLD", "HELLO WORLD");
         }
     }
 }

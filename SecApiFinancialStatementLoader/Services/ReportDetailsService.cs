@@ -1,23 +1,25 @@
-﻿using SecApiFinancialStatementLoader.Models;
+﻿using SecApiFinancialStatementLoader.IServices;
+using SecApiFinancialStatementLoader.Models;
+using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace SecApiFinancialStatementLoader.Services
 {
-    public class ReportDetailsService
+    public class ReportDetailsService : IReportDetailsService
     {
-        private readonly SecApiClientService _secApiClientService;
+        private readonly ISecApiClient _secApiClient;
 
-        public ReportDetailsService()
+        public ReportDetailsService(ISecApiClient secApiClient)
         {
-            _secApiClientService = new SecApiClientService();
+            _secApiClient = secApiClient;
         }
 
-        public async Task<ReportDetails> GetLatest10kDetails(string cikNumber)
+        public async Task<ReportDetails> Get_LatestReportDetails_By_Company(string cikNumber, Action<string> logger)
         {
             // Send HTTP Request to SEC API
-            string submissionsResponseJson = await _secApiClientService.RetrieveSubmissions(cikNumber);
+            string submissionsResponseJson = await _secApiClient.RetrieveSubmissions(cikNumber, logger);
 
             JsonElement recentFilings = JsonDocument
                 .Parse(submissionsResponseJson)
