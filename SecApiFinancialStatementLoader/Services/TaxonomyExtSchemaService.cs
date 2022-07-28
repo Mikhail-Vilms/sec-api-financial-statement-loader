@@ -9,6 +9,9 @@ using System.Xml.Schema;
 
 namespace SecApiFinancialStatementLoader.Services
 {
+    /// <summary>
+    /// Class responsible for operations with "XBRL TAXONOMY EXTENSION SCHEMA DOCUMENT" files
+    /// </summary>
     public class TaxonomyExtSchemaService : ITaxonomyExtSchemaService
     {
         private readonly ISecApiClient _secApiClient;
@@ -52,6 +55,7 @@ namespace SecApiFinancialStatementLoader.Services
             _secApiClient = secApiClient;
         }
 
+        /// <inheritdoc />
         public async Task<XmlSchema> RetrieveAndParse(
             string cikNumber,
             string tickerSymbol,
@@ -74,6 +78,7 @@ namespace SecApiFinancialStatementLoader.Services
             return taxanomySchemaXsd;
         }
 
+        /// <inheritdoc />
         public string Get_FinancialStatementURI_From_TaxanomySchema(
             XmlSchema taxanomySchemaXsd,
             FinancialStatementType financialStatement,

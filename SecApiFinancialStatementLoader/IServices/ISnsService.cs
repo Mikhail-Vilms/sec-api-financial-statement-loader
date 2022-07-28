@@ -3,9 +3,19 @@ using System.Threading.Tasks;
 
 namespace SecApiFinancialStatementLoader.IServices
 {
+    /// <summary>
+    /// Contract for interactions with SNS topics
+    /// </summary>
     public interface ISnsService
     {
-        public Task PublishFinancialPositionToLoadAsync(string snsMsgJsonStr);
-        public Task PublishFinancialPositionsToLoadAsync(IList<string> snsMessages);
+        /// <summary>
+        /// Method that publishes individual message to SNS topic
+        /// </summary>
+        public Task PublishMsgAsync(string snsMsgJsonStr);
+
+        /// <summary>
+        /// Method that publishes list of messages to SNS topic
+        /// </summary>
+        public Task PublishMsgsAsync(IList<string> snsMsgs);
     }
 }
