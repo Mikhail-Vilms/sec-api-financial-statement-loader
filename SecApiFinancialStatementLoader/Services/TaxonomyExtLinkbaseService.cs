@@ -74,13 +74,17 @@ namespace SecApiFinancialStatementLoader.Services
                 }
 
                 string fullLabel = cashFlowNode.GetAttribute("xlink:label");
-                string name = fullLabel.Split("_")[2];
+                string finPosLabel = fullLabel.Split("_")[2];
 
-                financialStatementTree.Add(fullLabel, new FinancialStatementNode()
+                if (financialStatementTree.ContainsKey(finPosLabel))
                 {
-                    FullLabel = fullLabel,
-                    Name = name,
-                    Children = new List<string>()
+                    continue;
+                }
+
+                financialStatementTree.Add(finPosLabel, new FinancialStatementNode()
+                {
+                    Name = finPosLabel,
+                    Children = new HashSet<string>()
                 });
             }
 
@@ -95,9 +99,16 @@ namespace SecApiFinancialStatementLoader.Services
                 string arcFromPosition = cashFlowNode.GetAttribute("xlink:from");
                 string arcToPosition = cashFlowNode.GetAttribute("xlink:to");
 
-                financialStatementTree[arcFromPosition]
-                    .Children
-                    .Add(arcToPosition);
+                string parentFinPosLabel = arcFromPosition.Split("_")[2];
+                string childFinPosLabel = arcToPosition.Split("_")[2];
+
+                var children = financialStatementTree[parentFinPosLabel].Children;
+                if (children.Contains(childFinPosLabel))
+                {
+                    continue;
+                }
+
+                children.Add(childFinPosLabel);
             }
 
             return financialStatementTree;
