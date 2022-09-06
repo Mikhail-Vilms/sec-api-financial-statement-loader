@@ -2,7 +2,7 @@
 This service is responsible for fetching data from 
 
 ## Table of Contents
-- **[Project Overview](#ii-project-overview)**
+- **[Project Overview](#project-overview)**
 - Glossary Terms
   - SEC
   - SEC API
