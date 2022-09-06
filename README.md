@@ -18,14 +18,14 @@ This service is responsible for fetching data from
 - Problem that this services solves: SEC API is a public API and has rate limiting . Besides that, 
 
 #### List of services that are part of this project:
-1. **[Financial Data Loader Bootsrapping](https://github.com/Mikhail-Vilms/sec-api-financial-data-loader-bootsrapping): Service contains terraform scripts necessary for boostrapping the rest of services**
+1. **[Financial Data Loader Bootsrapping](https://github.com/Mikhail-Vilms/sec-api-financial-data-loader-bootsrapping)**: Service contains terraform scripts necessary for boostrapping the rest of services
 2. **[Company Details Loader](https://github.com/Mikhail-Vilms/sec-api-company-details-loader)**
 3. **[Financial Data Loader](https://github.com/Mikhail-Vilms/sec-api-financial-data-loader)**
-4. **[Financial Statement Loader](https://github.com/Mikhail-Vilms/sec-api-financial-statement-loader): Responsible for:**
-   - **Retrieving structure for the given financial statement and company**
-   - **Saving it to DynamoDB table**
-   - **Notifying "Financial Position Loader" service what financial positions are ready to be processed**
-5. **[Financial Position Loader](https://github.com/Mikhail-Vilms/sec-api-financial-position-loader): Responsible for fethching all financial facts for the given financial position (that belongs to the specific )**
+4. **[Financial Statement Loader](https://github.com/Mikhail-Vilms/sec-api-financial-statement-loader)**: Responsible for:
+   - Retrieving structure for the given financial statement and company
+   - Saving it to DynamoDB table
+   - Notifying "Financial Position Loader" service what financial positions are ready to be processed
+5. **[Financial Position Loader](https://github.com/Mikhail-Vilms/sec-api-financial-position-loader)**: Responsible for fethching all financial facts for the given financial position (that belongs to the specific )
 6. **[Financial Data Service](https://github.com/Mikhail-Vilms/sec-api-financial-data-service)**
 7. **[Financial Data Service UI](https://github.com/Mikhail-Vilms/sec-api-financial-data-service-ui)**
 
