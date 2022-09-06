@@ -23,6 +23,7 @@ List of services that are part of this project:
 - [Financial Position Loader](https://github.com/Mikhail-Vilms/sec-api-financial-position-loader)
 - [Financial Data Service](https://github.com/Mikhail-Vilms/sec-api-financial-data-service)
 - [Financial Data Service UI](https://github.com/Mikhail-Vilms/sec-api-financial-data-service-ui)
+![Project_Overview_2](https://user-images.githubusercontent.com/57194114/188555596-ea1ff87c-8909-4ee8-864f-d14a41127af0.jpg)
 
 ## Glossary Terms
 
