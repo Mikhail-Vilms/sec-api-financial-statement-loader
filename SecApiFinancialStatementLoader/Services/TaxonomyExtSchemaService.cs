@@ -10,16 +10,15 @@ using System.Xml.Schema;
 namespace SecApiFinancialStatementLoader.Services
 {
     /// <summary>
-    /// Class responsible for operations with "XBRL TAXONOMY EXTENSION SCHEMA DOCUMENT" files
+    /// Class for operations with "XBRL TAXONOMY EXTENSION SCHEMA DOCUMENT" entities
     /// </summary>
     public class TaxonomyExtSchemaService : ITaxonomyExtSchemaService
     {
-        private readonly ISecApiClient _secApiClient;
-
+        // Hardcoding statement titles that we need to fetch
         private readonly Dictionary<string, List<string>> _statementTitles = new Dictionary<string, List<string>>()
         {
             {
-                FinancialStatementType.IncomeStatement.ToString(),
+                FinancialStatementEnum.IncomeStatement.ToString(),
                 new List<string>()
                 {
                     "StatementsOfEarnings", // used by GS
@@ -31,7 +30,7 @@ namespace SecApiFinancialStatementLoader.Services
                 }
             },
             {
-                FinancialStatementType.BalanceSheet.ToString(),
+                FinancialStatementEnum.BalanceSheet.ToString(),
                 new List<string>()
                 {
                     "BalanceSheets",
@@ -40,7 +39,7 @@ namespace SecApiFinancialStatementLoader.Services
                 }
             },
             {
-                FinancialStatementType.CashFlowStatement.ToString(),
+                FinancialStatementEnum.CashFlowStatement.ToString(),
                 new List<string>()
                 {
                     "StatementsOfCashFlows",
@@ -50,39 +49,36 @@ namespace SecApiFinancialStatementLoader.Services
             },
         };
 
+        private readonly ISecApiClient _secApiClient;
+
         public TaxonomyExtSchemaService(ISecApiClient secApiClient)
         {
             _secApiClient = secApiClient;
         }
 
         /// <inheritdoc />
-        public async Task<XmlSchema> RetrieveAndParse(
-            string cikNumber,
-            string tickerSymbol,
-            string accessionNumber,
-            string reportDate,
+        public async Task<string> GetFinancialStatementURI(
+            FinancialStatementDetails finStatementDetails,
+            ReportDetails reportDetails,
             Action<string> logger)
         {
             // Get "XBRL TAXONOMY EXTENSION SCHEMA DOCUMENT" for the latest 10k:
             string taxanomySchemaResponseStr = await _secApiClient.RetrieveTaxanomyXsdDoc(
-                cikNumber,
-                accessionNumber,
-                tickerSymbol,
-                reportDate,
+                finStatementDetails.CikNumber,
+                reportDetails.AccessionNumber,
+                finStatementDetails.TickerSymbol,
+                reportDetails.ReportDate,
                 logger);
 
-            // Parse into XmlSchema:
+            // Parse response into XmlSchema:
             XmlSchema taxanomySchemaXsd = XmlSchema
                 .Read(new StringReader(taxanomySchemaResponseStr), null);
 
-            return taxanomySchemaXsd;
+            // Fetch the URI of the given financial statement from the "Taxonomy Extension Schema Document":
+            return LookupForFinancialStatementURI(taxanomySchemaXsd, finStatementDetails.FinancialStatement);
         }
 
-        /// <inheritdoc />
-        public string Get_FinancialStatementURI_From_TaxanomySchema(
-            XmlSchema taxanomySchemaXsd,
-            FinancialStatementType financialStatement,
-            Action<string> logger)
+        private string LookupForFinancialStatementURI(XmlSchema taxanomySchemaXsd, FinancialStatementEnum financialStatement)
         {
             // 1) Looking for <xs:annotation>:
             XmlSchemaAnnotation xsa = null;

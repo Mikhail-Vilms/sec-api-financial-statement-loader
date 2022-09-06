@@ -7,6 +7,9 @@ using System.Xml;
 
 namespace SecApiFinancialStatementLoader.Services
 {
+    /// <summary>
+    /// Class for operations with "XBRL TAXONOMY EXTENSION CALCULATION LINKBASE DOCUMENT" entities
+    /// </summary>
     public class TaxonomyExtLinkbaseService : ITaxonomyExtLinkbaseService
     {
         private readonly ISecApiClient _secApiClient;
@@ -16,37 +19,39 @@ namespace SecApiFinancialStatementLoader.Services
             _secApiClient = secApiClient;
         }
 
-        public async Task<XmlDocument> RetrieveAndParse(
-            string cikNumber,
-            string tickerSymbol,
-            string accessionNumber,
-            string reportDate,
+        /// <inheritdoc />
+        public async Task <Dictionary<string, FinancialStatementNode>> GetFinancialStatementStructure(
+            FinancialStatementDetails finStatementDetails,
+            ReportDetails reportDetails,
+            string financialStatementUri,
             Action<string> logger)
         {
             // Get "XBRL TAXONOMY EXTENSION CALCULATION LINKBASE DOCUMENT" for the current report:
             string taxanomyCalculationLinkbaseStr = await _secApiClient
                 .RetrieveTaxanomyCalDocXml(
-                    cikNumber,
-                    accessionNumber,
-                    tickerSymbol,
-                    reportDate,
+                    finStatementDetails.CikNumber,
+                    reportDetails.AccessionNumber,
+                    finStatementDetails.TickerSymbol,
+                    reportDetails.ReportDate,
                     logger);
 
-            // Parse into xml doc:
+            // Parse into XML doc:
             XmlDocument taxanomyCalculationLinkbaseXml = new XmlDocument();
             taxanomyCalculationLinkbaseXml.LoadXml(taxanomyCalculationLinkbaseStr);
 
-            return taxanomyCalculationLinkbaseXml;
+            return ConstructFinStatementStructure(
+                taxanomyCalculationLinkbaseXml,
+                financialStatementUri);
         }
 
-        public Dictionary<string, FinancialStatementNode> Get_FinancialStatementTree_From_TaxanomyLinkbaseDoc(
-            XmlDocument taxanomyCalDocXml,
-            string financialStatementUri,
-            Action<string> logger)
+        private Dictionary<string, FinancialStatementNode> ConstructFinStatementStructure(
+            XmlDocument taxanomyCalculationLinkbaseXml,
+            string financialStatementUri)
         {
-            XmlElement cashFlowStatementRootXmlNode = null;
+            // Trying to find XML node that reflects current financial statement "head node" (or "root node"):
+            XmlElement finStatementRootXmlNode = null;
 
-            XmlElement root = taxanomyCalDocXml.DocumentElement;
+            XmlElement root = taxanomyCalculationLinkbaseXml.DocumentElement;
             foreach (XmlElement currentNode in root.ChildNodes)
             {
                 string nodeName = currentNode.Name;
@@ -58,51 +63,56 @@ namespace SecApiFinancialStatementLoader.Services
 
                     if (nodeName.Contains("calculationLink") && attributeName == "xlink:role" && attributeValue == financialStatementUri)
                     {
-                        cashFlowStatementRootXmlNode = currentNode;
+                        finStatementRootXmlNode = currentNode;
                     }
                 }
             }
 
+
+            // Construct financial statement structure:
             Dictionary<string, FinancialStatementNode> financialStatementTree =
                 new Dictionary<string, FinancialStatementNode>();
-            // Find all cash flow statement nodes:
-            foreach (XmlElement cashFlowNode in cashFlowStatementRootXmlNode.ChildNodes)
+
+            // Find all given financial statement's nodes:
+            foreach (XmlElement finStatementNode in finStatementRootXmlNode.ChildNodes)
             {
-                if (!cashFlowNode.Name.Contains("loc"))
+                if (!finStatementNode.Name.Contains("loc"))
                 {
                     continue;
                 }
 
-                string fullLabel = cashFlowNode.GetAttribute("xlink:label");
-                string finPosLabel = fullLabel.Split("_")[2];
+                string finPositionFullLabel = finStatementNode.GetAttribute("xlink:label");
+                string finPositionName = GetFinancialPositionName(finPositionFullLabel);
 
-                if (financialStatementTree.ContainsKey(finPosLabel))
+                // Sometimes companies file the same financial position twice - we want to exclude duplications
+                if (financialStatementTree.ContainsKey(finPositionName))
                 {
                     continue;
                 }
 
-                financialStatementTree.Add(finPosLabel, new FinancialStatementNode()
+                financialStatementTree.Add(finPositionName, new FinancialStatementNode()
                 {
-                    Name = finPosLabel,
+                    Name = finPositionName,
                     Children = new HashSet<string>()
                 });
             }
 
-            // Find all links between cash flow statement nodes:
-            foreach (XmlElement cashFlowNode in cashFlowStatementRootXmlNode.ChildNodes)
+            // Find all links between financial statement nodes:
+            foreach (XmlElement finStatementNode in finStatementRootXmlNode.ChildNodes)
             {
-                if (!cashFlowNode.Name.Contains("calculationArc"))
+                if (!finStatementNode.Name.Contains("calculationArc"))
                 {
                     continue;
                 }
 
-                string arcFromPosition = cashFlowNode.GetAttribute("xlink:from");
-                string arcToPosition = cashFlowNode.GetAttribute("xlink:to");
+                string arcFromPositionFullLabel = finStatementNode.GetAttribute("xlink:from");
+                string arcToPositionFullLabel = finStatementNode.GetAttribute("xlink:to");
 
-                string parentFinPosLabel = arcFromPosition.Split("_")[2];
-                string childFinPosLabel = arcToPosition.Split("_")[2];
+                string parentFinPosName = GetFinancialPositionName(arcFromPositionFullLabel);
+                string childFinPosLabel = GetFinancialPositionName(arcToPositionFullLabel);
 
-                var children = financialStatementTree[parentFinPosLabel].Children;
+                // Just like before - trying to avoid duplicates if there are any:
+                var children = financialStatementTree[parentFinPosName].Children;
                 if (children.Contains(childFinPosLabel))
                 {
                     continue;
@@ -112,6 +122,16 @@ namespace SecApiFinancialStatementLoader.Services
             }
 
             return financialStatementTree;
+        }
+
+        private string GetFinancialPositionName(string finPositionFullLabel)
+        {
+            // Taking part of the label that is right next to "us-gaap" - this is an actual name of the financial position:
+            string[] finStatementNodeLabelArr = finPositionFullLabel.Split("_");
+            int taxonomyLableIndex = Array.IndexOf(finStatementNodeLabelArr, "us-gaap");
+            string finPositionName = finStatementNodeLabelArr[taxonomyLableIndex + 1];
+
+            return finPositionName;
         }
     }
 }

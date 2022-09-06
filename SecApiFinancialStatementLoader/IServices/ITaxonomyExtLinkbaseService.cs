@@ -2,21 +2,20 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace SecApiFinancialStatementLoader.IServices
 {
+    /// <summary>
+    /// Contract for operatoins with "XBRL TAXONOMY EXTENSION CALCULATION LINKBASE DOCUMENT" entities
+    /// </summary>
     public interface ITaxonomyExtLinkbaseService
     {
-        public Task<XmlDocument> RetrieveAndParse(
-            string cikNumber,
-            string tickerSymbol,
-            string accessionNumber,
-            string reportDate,
-            Action<string> logger);
-
-        public Dictionary<string, FinancialStatementNode> Get_FinancialStatementTree_From_TaxanomyLinkbaseDoc(
-            XmlDocument taxanomyCalDocXml,
+        /// <summary>
+        /// Method that retrieves an "XBRL TAXONOMY EXTENSION CALCULATION LINKBASE DOCUMENT" xml file from the SEC API and constructs a dictionary that reflects the structure of a given financial statement
+        /// </summary>
+        public Task<Dictionary<string, FinancialStatementNode>> GetFinancialStatementStructure(
+            FinancialStatementDetails finStatementDetails,
+            ReportDetails reportDetails,
             string financialStatementURI,
             Action<string> logger);
     }

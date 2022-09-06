@@ -6,6 +6,6 @@ namespace SecApiFinancialStatementLoader.IServices
 {
     public interface IFinancialStatementLoader
     {
-        public Task Load(LambdaTriggerMessage triggerMessage, Action<string> Log);
+        public Task Load(FinancialStatementDetails finStatementDetails, Action<string> Log);
     }
 }

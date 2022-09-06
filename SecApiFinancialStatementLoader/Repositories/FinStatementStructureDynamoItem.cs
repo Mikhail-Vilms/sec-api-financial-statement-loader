@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace SecApiFinancialStatementLoader.Repositories
 {
     [DynamoDBTable("Sec-Api-Financial-Data")]
-    public class ReportStructureDynamoDbItem
+    public class FinStatementStructureDynamoItem
     {
         [DynamoDBHashKey("PartitionKey")]
         public string PartitionKey { get; set; }
@@ -14,5 +14,10 @@ namespace SecApiFinancialStatementLoader.Repositories
         public string SortKey { get; set; }
 
         public Dictionary<string, FinancialStatementNode> FinancialPositions { get; set; }
+
+        public override string ToString()
+        {
+            return $"PartitionKey: {PartitionKey}; SortKey: {SortKey}";
+        }
     }
 }

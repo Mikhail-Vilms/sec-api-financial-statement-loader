@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Schema;
 
 namespace SecApiFinancialStatementLoader.Services
 {
@@ -35,88 +33,50 @@ namespace SecApiFinancialStatementLoader.Services
         }
 
         public async Task Load(
-            LambdaTriggerMessage triggerMessage,
+            FinancialStatementDetails finStatementDetails,
             Action<string> logger)
         {
-            if (triggerMessage == null || triggerMessage.CikNumber == null || triggerMessage.TickerSymbol == null)
-            {
-                logger($"Error occured: both cik number and ticker symbol values have to be provided in the trigger message");
-            }
-            string cikNumber = triggerMessage.CikNumber;
-            string tickerSymbol = triggerMessage.TickerSymbol;
-
-
             // Find latest 10K report for the company:
-            logger($"Trying to retrieve report details for {tickerSymbol}/{cikNumber}");
-            ReportDetails reportDetails = await _reportDetailsService.Get_LatestReportDetails_By_Company(cikNumber, logger);
+            logger($"Trying to retrieve report details for {finStatementDetails}");
+            ReportDetails reportDetails = await _reportDetailsService
+                .Get_LatestReportDetails_By_Company(finStatementDetails.CikNumber, logger);
             logger($"Details of the latest report: {reportDetails}");
 
-            XmlSchema taxanomySchemaXsd = 
-                await _taxonomyExtSchemaService.RetrieveAndParse(
-                    cikNumber,
-                    tickerSymbol,
-                    reportDetails.AccessionNumber,
-                    reportDetails.ReportDate,
-                    logger);
 
-            XmlDocument taxanomyCalculationLinkbaseXml = 
-                await _taxonomyExtLinkbaseService.RetrieveAndParse(
-                    cikNumber,
-                    tickerSymbol,
-                    reportDetails.AccessionNumber,
-                    reportDetails.ReportDate,
-                    logger);
+            // Get "XBRL TAXONOMY EXTENSION SCHEMA DOCUMENT" xsd file from the SEC API and perform search for the "Financial Statement URI"-element:
+            string financialStatementURI = await _taxonomyExtSchemaService
+                .GetFinancialStatementURI(finStatementDetails, reportDetails, logger);
+            logger($"Financial statement's URI for {finStatementDetails} has been successfully fetched: {financialStatementURI}");
 
-            foreach(FinancialStatementType financialStatementType in Enum.GetValues(typeof(FinancialStatementType)))
+
+            // Get the "XBRL TAXONOMY EXTENSION CALCULATION LINKBASE DOCUMENT" for the given financial statement;
+            // Traverse all the nodes in this document and store them in a dictionary that reflects the financail statement's structure:
+            Dictionary<string, FinancialStatementNode> financialStatementStructure =await _taxonomyExtLinkbaseService
+                .GetFinancialStatementStructure(finStatementDetails, reportDetails, financialStatementURI, logger);
+            logger($"Financial statement structure for {finStatementDetails} have been retrieved; Total number of financial positions: {financialStatementStructure.Keys.Count}");
+
+
+            // Save dictionary to the dynamo table:
+            var newDynamoItem = new FinStatementStructureDynamoItem()
             {
-                await LoadFinancialStatement(
-                    cikNumber,
-                    tickerSymbol,
-                    financialStatementType,
-                    taxanomySchemaXsd,
-                    taxanomyCalculationLinkbaseXml,
-                    logger);
-            }
-        }
+                PartitionKey = finStatementDetails.CikNumber,
+                SortKey = $"StatementStructure_{finStatementDetails.FinancialStatement}",
+                FinancialPositions = financialStatementStructure
+            };
+            await _dynamoDbContext.SaveAsync(newDynamoItem);
+            logger($"Financial statement's structure for {finStatementDetails} has been saved to Dynamo; {newDynamoItem}");
 
-        private async Task LoadFinancialStatement(
-            string cikNumber,
-            string tickerSymbol,
-            FinancialStatementType financialStatementType,
-            XmlSchema taxanomySchemaXsd,
-            XmlDocument taxanomyCalculationLinkbaseXml,
-            Action<string> logger)
-        {
-            string financialStatementURI = _taxonomyExtSchemaService
-                .Get_FinancialStatementURI_From_TaxanomySchema(
-                    taxanomySchemaXsd,
-                    financialStatementType,
-                    logger);
 
-            Dictionary<string, FinancialStatementNode> financialStatementTree = _taxonomyExtLinkbaseService
-                .Get_FinancialStatementTree_From_TaxanomyLinkbaseDoc(
-                    taxanomyCalculationLinkbaseXml,
-                    financialStatementURI,
-                    logger);
-
-            await _dynamoDbContext.SaveAsync(new ReportStructureDynamoDbItem()
-            {
-                PartitionKey = cikNumber,
-                SortKey = $"StatementStructure_{financialStatementType}",
-                FinancialPositions = financialStatementTree
-            });
-
-            logger($"Financial statement's structure for {tickerSymbol}/{cikNumber}/{financialStatementType} has been saved to Dynamo");
-
+            // Publish messages to the SNS topic:
             await _snsService.PublishMsgsAsync(
-                financialStatementTree
+                financialStatementStructure
                     .Values
                     .Select(finStatementNode => JsonSerializer
                         .Serialize(new
                         {
-                            CikNumber = cikNumber,
-                            TickerSymbol = tickerSymbol,
-                            FinancialStatement = financialStatementType.ToString(),
+                            CikNumber = finStatementDetails.CikNumber,
+                            TickerSymbol = finStatementDetails.TickerSymbol,
+                            FinancialStatement = finStatementDetails.FinancialStatement.ToString(),
                             FinancialPosition = finStatementNode.Name
                         }))
                     .ToList());

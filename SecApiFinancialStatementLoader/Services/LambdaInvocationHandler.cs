@@ -41,6 +41,11 @@ namespace SecApiFinancialStatementLoader.Services
             try
             {
                 triggerMessage = _deserializer.Get(msg);
+
+                if (triggerMessage == null || triggerMessage.CikNumber == null || triggerMessage.TickerSymbol == null || triggerMessage.FinancialStatement == null)
+                {
+                    throw new ArgumentNullException("Cik number, ticker symbol and financial statement values have to be provided in the trigger message");
+                }
             }
             catch (Exception ex)
             {
@@ -50,7 +55,14 @@ namespace SecApiFinancialStatementLoader.Services
 
             try
             {
-                await _financialStatementLoader.Load(triggerMessage, Log);
+                FinancialStatementDetails finStatementDetails = new FinancialStatementDetails()
+                {
+                    CikNumber = triggerMessage.CikNumber,
+                    TickerSymbol = triggerMessage.TickerSymbol,
+                    FinancialStatement = (FinancialStatementEnum) Enum.Parse(typeof(FinancialStatementEnum), triggerMessage.FinancialStatement)
+                };
+
+                await _financialStatementLoader.Load(finStatementDetails, Log);
             }
             catch (Exception ex)
             {
