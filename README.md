@@ -2,6 +2,7 @@
 This service is responsible for fetching data from 
 
 ## Table of Contents
+- Project Overview
 - Glossary Terms
   - SEC
   - SEC API
@@ -11,6 +12,17 @@ This service is responsible for fetching data from
 - Infrastructure Overview
 - How to (Build / Deploy / Destroy)
 - Useful Links
+
+## Project Overview
+- "SEC API Financial Statement Loader" service is part of the project that retrieves financial data from SEC API, transformes it, stores it into DynamoDB using format that is convinient for searching and queuerying and provides it through public API 
+- Problem behind this service: SEC API is a public API and has rate limiting . Besides that, 
+
+List of services that are part of this project:
+- [Financial Data Loader Bootsrapping](https://github.com/Mikhail-Vilms/sec-api-financial-data-loader-bootsrapping)
+- [Financial Statement Loader](https://github.com/Mikhail-Vilms/sec-api-financial-statement-loader)
+- [Financial Position Loader](https://github.com/Mikhail-Vilms/sec-api-financial-position-loader)
+- [Financial Data Service](https://github.com/Mikhail-Vilms/sec-api-financial-data-service)
+- [Financial Data Service UI](https://github.com/Mikhail-Vilms/sec-api-financial-data-service-ui)
 
 ## Glossary Terms
 
