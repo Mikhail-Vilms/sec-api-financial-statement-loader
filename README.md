@@ -52,11 +52,20 @@ XBRL is the international standard for the electronic representation of business
 
 
 ## Workflow Overview
+![Financial_Statement_Loader](https://user-images.githubusercontent.com/57194114/188558467-c8e858f7-540b-4332-a5a0-563ea86418dc.jpg)
+
+- SQS queue is subscribed to SNS topic that has publishes messages that have following format:
+  - 123 
 - Lambda is triggered by SQS queue. SQS queue is subscribed to SNS topic. Lambda expects messages that have three fields:
-  - 
-  - 
-  - 
-- 
+  - 123
+  - 123
+  - 123
+- Lambda executes two api requests to the SEC API
+- Next, lambda builds dictionary that reflects the structure of the financial statement
+- Persists this dictionary into the DynamoDB table
+- Publishes messages into SNS topic: 
+
+
 ## Infrastructure Overview
 
 ## How to (Build / Deploy / Destroy)
