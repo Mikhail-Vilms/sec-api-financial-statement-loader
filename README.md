@@ -15,7 +15,7 @@ This service is responsible for fetching data from
 
 ## Project Overview
 - "SEC API Financial Statement Loader" service is part of the project that retrieves financial data from SEC API, transformes it, stores it into DynamoDB using format that is convinient for searching and queuerying and provides it through public API 
-- Problem that this services solves: SEC API is a public API and has rate limiting . Besides that, 
+- *Problem that this services solves*: SEC API is a public API and has rate limiting . Besides that, 
 
 #### List of services that are part of this project:
 1. **[Financial Data Loader Bootsrapping](https://github.com/Mikhail-Vilms/sec-api-financial-data-loader-bootsrapping)**: Service contains terraform scripts necessary for boostrapping the rest of services
